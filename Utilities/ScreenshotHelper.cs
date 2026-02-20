@@ -4,11 +4,11 @@ namespace OrangeHRM_Revised.Utilities
 {
     public static class ScreenshotHelper
     {
-        public static string CaptureScreenshot(IWebDriver driver)
+        public static string CaptureScreenshot(IWebDriver WebDriver)
         {
             try
             {
-                var screenshot = ((ITakesScreenshot)driver).GetScreenshot();
+                var screenshot = ((ITakesScreenshot)WebDriver).GetScreenshot();
 
                 var folderPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Screenshots");
                 Directory.CreateDirectory(folderPath);
@@ -19,6 +19,9 @@ namespace OrangeHRM_Revised.Utilities
                 string filePath = Path.Combine(folderPath, fileName);
 
                 screenshot.SaveAsFile(filePath);
+
+                TestContext.AddTestAttachment(filePath, "Screenshot on Failure");
+
                 return filePath;
             }
             catch (Exception ex)

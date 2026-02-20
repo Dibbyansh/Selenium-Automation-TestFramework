@@ -7,13 +7,13 @@ namespace OrangeHRM_Revised.Base
 {
     public class BaseTest
     {
-        protected IWebDriver driver;
+        protected IWebDriver WebDriver;
 
         [SetUp]
         public void Setup()
         {
-            driver = DriverFactory.InitDriver();
-            driver.Navigate().GoToUrl(ConfigManager.BaseUrl);
+            WebDriver = DriverFactory.InitDriver();
+            WebDriver.Navigate().GoToUrl(ConfigManager.BaseUrl);
         }
 
         [TearDown]
@@ -25,14 +25,14 @@ namespace OrangeHRM_Revised.Base
 
                 if (status == TestStatus.Failed)
                 {
-                    ScreenshotHelper.CaptureScreenshot(driver);
+                    ScreenshotHelper.CaptureScreenshot(WebDriver);
                 }
                 
             }
             finally
             {
-                driver.Quit(); 
-                driver.Dispose(); 
+                WebDriver.Quit(); 
+                WebDriver.Dispose(); 
             }
         }
     }

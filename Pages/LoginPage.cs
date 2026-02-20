@@ -8,7 +8,6 @@ namespace OrangeHRM_Revised.Pages
     {
         private readonly IWebDriver WebDriver;
 
-
         public LoginPage(IWebDriver WebDriver)
         {
             this.WebDriver = WebDriver;

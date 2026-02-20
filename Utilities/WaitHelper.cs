@@ -5,9 +5,9 @@ namespace OrangeHRM_Revised.Utilities
 {
     public static class WaitHelper
     {
-        public static void WaitForElement(IWebDriver driver, By locator, int seconds)
+        public static void WaitForElement(IWebDriver WebDriver, By locator, int seconds)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
+            WebDriverWait wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds));
             wait.Until(d => d.FindElement(locator).Displayed);
         }
     }
