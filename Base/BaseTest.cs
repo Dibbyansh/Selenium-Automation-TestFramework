@@ -9,7 +9,7 @@ namespace OrangeHRM_Revised.Base
     {
         protected IWebDriver WebDriver;
 
-        [SetUp]
+        [SetUp]  // Each test gets fresh state - REQUIRED for login tests
         public void Setup()
         {
             WebDriver = DriverFactory.InitDriver();
@@ -22,17 +22,15 @@ namespace OrangeHRM_Revised.Base
             try
             {
                 var status = TestContext.CurrentContext.Result.Outcome.Status;
-
                 if (status == TestStatus.Failed)
                 {
                     ScreenshotHelper.CaptureScreenshot(WebDriver);
                 }
-                
             }
             finally
             {
-                WebDriver.Quit(); 
-                WebDriver.Dispose(); 
+                WebDriver?.Quit();
+                WebDriver?.Dispose();
             }
         }
     }

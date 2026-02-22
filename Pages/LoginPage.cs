@@ -11,7 +11,7 @@ namespace OrangeHRM_Revised.Pages
         public LoginPage(IWebDriver WebDriver)
         {
             this.WebDriver = WebDriver;
-            WaitHelper.WaitForElement(WebDriver, LoginPageLocators.LoginTitle, 10);
+            WaitHelper.WaitForElement(WebDriver, LoginPageLocators.LoginTitle, 30);
         }
 
         public void Login(string username, string password)
