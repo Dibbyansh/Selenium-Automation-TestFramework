@@ -1,7 +1,6 @@
-﻿using OpenQA.Selenium;
-using OrangeHRM_Revised.Base;
+﻿using System.Linq;
+using OpenQA.Selenium;
 using OrangeHRM_Revised.Locators;
-using OrangeHRM_Revised.Tests.Dashboard;
 using OrangeHRM_Revised.Utilities;
 
 namespace OrangeHRM_Revised.Pages.Dashboard
@@ -12,19 +11,19 @@ namespace OrangeHRM_Revised.Pages.Dashboard
         public DashboardPage(IWebDriver WebDriver)
         {
             this.WebDriver = WebDriver;
-            WaitHelper.WaitForElement(WebDriver, DashbardPageLocators.DashboardTitle, 30);
+            // Use configured default timeout
+            WaitHelper.WaitForElement(WebDriver, DashbardPageLocators.DashboardTitle);
         }
 
-        public IWebElement GetCardByTitle(string title)
+        public void WaitForCardToBeReady(string title)
         {
-            return WebDriver.FindElement(DashbardPageLocators.Cards(title));
-        }
+            WaitHelper.WaitUntil(WebDriver, driver =>
+            {
+                var card = driver.FindElement(DashbardPageLocators.CardsByTitle(title));
+                var spinners = card.FindElements(DashbardPageLocators.CardSpinner);
 
-        public void waitforCardToLoad(string title)
-        {
-            var card = GetCardByTitle(title);
-            By spinnerLocator =  (By)card.FindElement(DashbardPageLocators.CardSpinner);
-            WaitHelper.WaitForSpinnerToDisappear(WebDriver, spinnerLocator, 30);
+                return spinners.Count == 0 || spinners.All(s => !s.Displayed);
+            });
         }
     }
 }

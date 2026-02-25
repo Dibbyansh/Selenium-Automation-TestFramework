@@ -1,13 +1,9 @@
-﻿using OrangeHRM_Revised.Base;
+﻿using System.Linq;
+using OpenQA.Selenium;
+using OrangeHRM_Revised.Base;
 using OrangeHRM_Revised.Locators;
 using OrangeHRM_Revised.Pages.Dashboard;
-using OrangeHRM_Revised.Pages.Dashboard.Components;
 using OrangeHRM_Revised.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrangeHRM_Revised.Tests.Dashboard
 {
@@ -29,12 +25,33 @@ namespace OrangeHRM_Revised.Tests.Dashboard
         }
 
         [Test]
-        public void cardloading_TimeAtWork()
+        public void AllDashboardCards_LoadSuccessfully()
         {
-            dashboardPage.waitforCardToLoad("Time At Work");
-            bool hah = WebDriver.FindElement(DashbardPageLocators.CardContent).Displayed;
-            Assert.IsTrue(hah);
+            var cards = WebDriver.FindElements(DashbardPageLocators.Cards);
 
+            // Each cards take different time to load, so not using global wait for all cards, but waiting for each card to be ready before asserting
+            foreach (var card in cards)
+            {
+                var title = card.FindElement(By.TagName("p")).Text.Trim();
+
+                if (string.IsNullOrEmpty(title))
+                    continue;
+
+                dashboardPage.WaitForCardToBeReady(title);
+
+                var refreshedCard = WaitHelper.WaitForElement(WebDriver, DashbardPageLocators.CardContent);
+
+                Assert.IsTrue(refreshedCard.Displayed, $"Dashboard card '{title}' did not load properly.");
+            }
+        }
+
+        [Test]
+        public void SideNavMenuDisplaysCorrectly()
+        {
+            List<string> SideNavMenu = WebDriver.FindElements(DashbardPageLocators.SidePanelMenu).Select(x => x.Text.Trim()).ToList();
+            List<string> expectedItems = JsonHelper.GetTestData<List<string>>("Dashboard.json", "SideNavItems")!;
+
+            Assert.That(SideNavMenu, Is.EqualTo(expectedItems));
         }
     }
 }
