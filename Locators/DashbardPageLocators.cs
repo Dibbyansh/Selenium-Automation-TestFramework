@@ -15,6 +15,9 @@ namespace OrangeHRM_Revised.Locators
         public static By CardsByTitle(string title) => By.XPath($"//div[contains(@class , 'oxd-sheet')]//p[text()='{title}']");
         public static By CardSpinner => By.XPath("//div[contains(@class , 'loading-spinner-container')]");
         public static By CardContent => By.CssSelector("div.orangehrm-attendance-card");
+        public static By TimeAtWorkCard_PunchStatus => By.CssSelector("div.orangehrm-attendance-card-profile-record p.orangehrm-attendance-card-state");
+        public static By TimeAtWorkCard_StopWatchIcon => By.CssSelector("button.orangehrm-attendance-card-action");
+
 
     }
 }
