@@ -16,7 +16,7 @@ namespace OrangeHRM_Revised.Tests
             string password = JsonHelper.GetTestData<string>("LoginData.json", "ValidUser.Password");
             loginPage.Login(username, password);
 
-            Assert.IsTrue(_driver.Url.Contains("dashboard"));
+            Assert.That(_driver.Url.Contains("dashboard"));
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace OrangeHRM_Revised.Tests
             loginPage.Login(username, password);
 
             WaitHelper.WaitForElement(_driver, LoginPageLocators.InvalidCredentialMsg, 10);
-            Assert.IsTrue(_driver.FindElement(LoginPageLocators.InvalidCredentialMsg).Displayed);
+            Assert.That(_driver.FindElement(LoginPageLocators.InvalidCredentialMsg).Displayed);
         }
     }
 }

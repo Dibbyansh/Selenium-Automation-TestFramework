@@ -20,7 +20,7 @@ namespace OrangeHRM_Revised.Tests.Dashboard
         public void DashboardTitle_isVisible()
         {
             bool isVisible = WaitHelper.WaitForElement(_driver, DashbardPageLocators.DashboardTitle).Displayed;
-            Assert.IsTrue(isVisible);
+            Assert.That(isVisible, Is.True, "Dashboard Title did not appear.");
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace OrangeHRM_Revised.Tests.Dashboard
                 dashboardPage.WaitForCardToBeReady(title);
 
                 var refreshedCard = WaitHelper.WaitForElement(_driver, DashbardPageLocators.CardContent);
-                Assert.IsTrue(refreshedCard.Displayed, $"Dashboard card '{title}' did not load properly.");
+                Assert.That(refreshedCard.Displayed, $"Dashboard card '{title}' did not load properly.");
             }
         }
 
