@@ -49,8 +49,4 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Dashboard\Components\" />
-  </ItemGroup>
-
 </Project>

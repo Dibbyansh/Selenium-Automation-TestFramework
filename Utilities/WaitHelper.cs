@@ -61,4 +61,30 @@ public static class WaitHelper
             }
         });
     }
+
+    public static void ClickWhenReady(IWebDriver driver, By locator, int seconds = DefaultTimeoutSeconds)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
+
+        wait.IgnoreExceptionTypes(
+            typeof(NoSuchElementException),
+            typeof(StaleElementReferenceException)
+        );
+
+        var element = wait.Until(d =>
+        {
+            var el = d.FindElement(locator);
+            return (el.Displayed && el.Enabled) ? el : null;
+        });
+
+        try
+        {
+            element.Click();
+        }
+        catch (ElementClickInterceptedException)
+        {
+            ((IJavaScriptExecutor)driver)
+                .ExecuteScript("arguments[0].click();", element);
+        }
+    }
 }

@@ -17,7 +17,7 @@ namespace OrangeHRM_Revised.Locators
         public static By CardContent => By.CssSelector("div.orangehrm-attendance-card");
         public static By TimeAtWorkCard_PunchStatus => By.CssSelector("div.orangehrm-attendance-card-profile-record p.orangehrm-attendance-card-state");
         public static By TimeAtWorkCard_StopWatchIcon => By.CssSelector("button.orangehrm-attendance-card-action");
-
+        public static By TimeAtWorkCard_PunchInTimeLabel => By.CssSelector("div.orangehrm-attendance-card-profile-record p.orangehrm-attendance-card-details");
 
     }
 }
