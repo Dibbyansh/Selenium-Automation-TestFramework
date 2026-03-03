@@ -1,102 +1,85 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.DevTools.V142.Page;
 using OrangeHRM_Revised.Locators;
-using OrangeHRM_Revised.Pages.Dashboard;
 using OrangeHRM_Revised.Utilities;
-using System.Globalization;
 
 namespace OrangeHRM_Revised.Pages.Dashboard
 {
     public class TimeAtWorkCardPage : DashboardPage
     {
-        private readonly IWebDriver WebDriver;
-        private readonly DashboardPage dashboardPage;
-        private string punchtime;
+        private string _punchTime;
 
-        public TimeAtWorkCardPage(IWebDriver WebDriver) : base(WebDriver)
-        {
-            this.WebDriver = WebDriver;
-            dashboardPage = new DashboardPage(WebDriver);
-        }
+        // Only one instance — base(driver) initialises _driver in DashboardPage.
+        public TimeAtWorkCardPage(IWebDriver driver) : base(driver) { }
 
         public void EnsureState(string expectedState)
         {
-            dashboardPage.WaitForCardToBeReady("Time at Work");
-            var punchStatus = WebDriver.FindElement(DashbardPageLocators.TimeAtWorkCard_PunchStatus).Text;
+            NavigateToDashboard();
+            WaitForCardToBeReady("Time at Work");
 
-            // if else loop to check if the expectedstate is equal to the punchstatus and if not then call perform punch method
+            var punchStatus = _driver.FindElement(DashbardPageLocators.TimeAtWorkCard_PunchStatus).Text;
             if (punchStatus.Equals(expectedState))
-            {
-                return; // Already in the expected state, no action needed
-            }
-            else
-            {
-                PerformPunch();
-                PerformSubmit();
-                VerifyToastMessage();
+                return;
 
-            }
+            PerformPunch();
+            PerformSubmit();
+            VerifyToastMessage();
         }
 
         public void PerformPunch()
         {
-            dashboardPage.WaitForCardToBeReady("Time at Work");
-            WebDriver.FindElement(DashbardPageLocators.TimeAtWorkCard_StopWatchIcon).Click();
-
+            WaitForCardToBeReady("Time at Work");
+            _driver.FindElement(DashbardPageLocators.TimeAtWorkCard_StopWatchIcon).Click();
         }
 
-        public void PerformSubmit(bool needCurrenttime = false)
+        public void PerformSubmit(bool captureTime = false)
         {
-            WaitHelper.WaitForSpinnerToDisappear(WebDriver, DashbardPageLocators.CardSpinner);
-            WaitHelper.ClickWhenReady(WebDriver, TimePageLocators.Attendance_PunchInPunchOut_SubmitBtn);
-            if (needCurrenttime == true)
-            {
-                punchtime = GetPunchTime();
-            }
+            WaitHelper.WaitForSpinnerToDisappear(_driver, DashbardPageLocators.CardSpinner);
+            WaitHelper.ClickWhenReady(_driver, TimePageLocators.Attendance_PunchInPunchOut_SubmitBtn);
+
+            if (captureTime)
+                _punchTime = DateTime.Now.ToString("hh:mm tt");
         }
 
-        public string GetPunchTime()
+        public void PerformPunchFunc(string titleBefore, string titleAfter)
         {
-            return DateTime.Now.ToString("hh:mm tt");
-        }
-
-        public void PerformPunchFunc(string expecteTitleBefore, string expectedTitleAfter)
-        {
-            navigateToDashboard();
+            NavigateToDashboard();
             PerformPunch();
-            AssertTitle(expecteTitleBefore);
-            PerformSubmit(true);
+            AssertTitle(titleBefore);
+            PerformSubmit(captureTime: true);
             VerifyToastMessage();
-            WaitHelper.WaitForSpinnerToDisappear(WebDriver, DashbardPageLocators.CardSpinner);
-            AssertTitle(expectedTitleAfter);
+            WaitHelper.WaitForSpinnerToDisappear(_driver, DashbardPageLocators.CardSpinner);
+            AssertTitle(titleAfter);
         }
 
         public void AssertTitle(string expectedTitle)
         {
-            var title = WaitHelper.WaitForElement(WebDriver, TimePageLocators.Attendance_PunchInPunchOut_Title).Text;
-            Assert.That(title, Does.Contain(expectedTitle), $"Expected title should contain '{expectedTitle}' but was not.");
+            var title = WaitHelper.WaitForElement(_driver, TimePageLocators.Attendance_PunchInPunchOut_Title).Text;
+            Assert.That(title, Does.Contain(expectedTitle),
+                $"Expected title to contain '{expectedTitle}' but got '{title}'.");
         }
 
-        public void AssertTimeDisplayed(By locator, bool isNavigateToDashboard = false)
+        public void AssertTimeDisplayed(By locator, bool navigateToDashboardFirst = false)
         {
-            if (isNavigateToDashboard == true)
-            {
-                navigateToDashboard();
-            }
-            string expectedTime = WaitHelper.WaitForElement(WebDriver, locator).Text;
-            Assert.That(expectedTime, Does.Contain(punchtime), $"Expected time should contain '{punchtime}' but was not.");
-        }
+            if (navigateToDashboardFirst)
+                NavigateToDashboard();
 
-        public void navigateToDashboard()
-        {
-            WebDriver.Navigate().GoToUrl("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+            var displayedTime = WaitHelper.WaitForElement(_driver, locator).Text;
+            Assert.That(displayedTime, Does.Contain(_punchTime),
+                $"Expected displayed time '{displayedTime}' to contain '{_punchTime}'.");
         }
 
         public void VerifyToastMessage()
         {
-            var toastMessage = WaitHelper.WaitForElement(WebDriver, TimePageLocators.Attendance_ToastMessage).Text;
-            Assert.That(toastMessage, Does.Contain("Successfully Saved"), $"Expected toast message did not appear.");
+            var toast = WaitHelper.WaitForElement(_driver, TimePageLocators.Attendance_ToastMessage).Text;
+            Assert.That(toast, Does.Contain("Successfully Saved"),
+                "Expected 'Successfully Saved' toast message did not appear.");
+        }
+
+        private void NavigateToDashboard()
+        {
+            _driver.Navigate().GoToUrl(
+                "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
         }
     }
 }

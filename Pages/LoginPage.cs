@@ -6,19 +6,19 @@ namespace OrangeHRM_Revised.Pages
 {
     public class LoginPage
     {
-        private readonly IWebDriver WebDriver;
+        private readonly IWebDriver _driver;
 
-        public LoginPage(IWebDriver WebDriver)
+        public LoginPage(IWebDriver _driver)
         {
-            this.WebDriver = WebDriver;
-            WaitHelper.WaitForElement(WebDriver, LoginPageLocators.LoginTitle, 30);
+            this._driver = _driver;
+            WaitHelper.WaitForElement(_driver, LoginPageLocators.LoginTitle, 30);
         }
 
         public void Login(string username, string password)
         {
-            WebDriver.FindElement(LoginPageLocators.UsernameField).SendKeys(username);
-            WebDriver.FindElement(LoginPageLocators.PasswordField).SendKeys(password);
-            WebDriver.FindElement(LoginPageLocators.LoginButton).Click();
+            _driver.FindElement(LoginPageLocators.UsernameField).SendKeys(username);
+            _driver.FindElement(LoginPageLocators.PasswordField).SendKeys(password);
+            _driver.FindElement(LoginPageLocators.LoginButton).Click();
         }
     }
 }

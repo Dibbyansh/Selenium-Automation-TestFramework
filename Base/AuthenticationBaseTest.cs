@@ -9,17 +9,17 @@ namespace OrangeHRM_Revised.Base
 {
     public class BaseAuthenticatedTest
     {
-        protected static IWebDriver WebDriver;  // Static = shared across all tests
+        protected static IWebDriver _driver;  // Static = shared across all tests
 
         [OneTimeSetUp]  // Runs ONCE - login happens once
         public void OneTimeSetup()
         {
             // Initialize browser ONCE
-            WebDriver = DriverFactory.InitDriver();
-            WebDriver.Navigate().GoToUrl(ConfigManager.BaseUrl);
+            _driver = DriverFactory.InitDriver();
+            _driver.Navigate().GoToUrl(ConfigManager.BaseUrl);
 
             // Login ONCE - stay logged in for all tests in this class
-            LoginPage loginPage = new LoginPage(WebDriver);
+            LoginPage loginPage = new LoginPage(_driver);
             string username = JsonHelper.GetTestData<string>("LoginData.json", "ValidUser.Username");
             string password = JsonHelper.GetTestData<string>("LoginData.json", "ValidUser.Password");
             loginPage.Login(username, password);
@@ -33,7 +33,7 @@ namespace OrangeHRM_Revised.Base
                 var status = TestContext.CurrentContext.Result.Outcome.Status;
                 if (status == TestStatus.Failed)
                 {
-                    ScreenshotHelper.CaptureScreenshot(WebDriver);
+                    ScreenshotHelper.CaptureScreenshot(_driver);
                 }
             }
             catch { }
@@ -42,8 +42,8 @@ namespace OrangeHRM_Revised.Base
         [OneTimeTearDown]  // Cleanup ONCE after all tests
         public void OneTimeTearDown()
         {
-            WebDriver?.Quit();
-            WebDriver?.Dispose();
+            _driver?.Quit();
+            _driver?.Dispose();
         }
     }
 }

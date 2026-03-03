@@ -1,35 +1,33 @@
-﻿using System.Linq;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OrangeHRM_Revised.Base;
 using OrangeHRM_Revised.Locators;
 using OrangeHRM_Revised.Pages.Dashboard;
-using OrangeHRM_Revised.Utilities;
 
 namespace OrangeHRM_Revised.Tests.Dashboard
 {
-    public class DashboardTest : BaseAuthenticatedTest  // Uses [OneTimeSetUp] - fast!
+    [TestFixture]
+    public class DashboardTest : BaseAuthenticatedTest
     {
         private DashboardPage dashboardPage;
 
         [SetUp]
         public void Setup()
         {
-            dashboardPage = new DashboardPage(WebDriver);
+            dashboardPage = new DashboardPage(_driver);
         }
 
         [Test]
         public void DashboardTitle_isVisible()
         {
-            bool isVisible = WebDriver.FindElement(DashbardPageLocators.DashboardTitle).Displayed;
+            bool isVisible = WaitHelper.WaitForElement(_driver, DashbardPageLocators.DashboardTitle).Displayed;
             Assert.IsTrue(isVisible);
         }
 
         [Test]
         public void AllDashboardCards_LoadSuccessfully()
         {
-            var cards = WebDriver.FindElements(DashbardPageLocators.Cards);
+            var cards = _driver.FindElements(DashbardPageLocators.Cards);
 
-            // Each cards take different time to load, so not using global wait for all cards, but waiting for each card to be ready before asserting
             foreach (var card in cards)
             {
                 var title = card.FindElement(By.TagName("p")).Text.Trim();
@@ -39,8 +37,7 @@ namespace OrangeHRM_Revised.Tests.Dashboard
 
                 dashboardPage.WaitForCardToBeReady(title);
 
-                var refreshedCard = WaitHelper.WaitForElement(WebDriver, DashbardPageLocators.CardContent);
-
+                var refreshedCard = WaitHelper.WaitForElement(_driver, DashbardPageLocators.CardContent);
                 Assert.IsTrue(refreshedCard.Displayed, $"Dashboard card '{title}' did not load properly.");
             }
         }
@@ -48,10 +45,11 @@ namespace OrangeHRM_Revised.Tests.Dashboard
         [Test]
         public void SideNavMenuDisplaysCorrectly()
         {
-            List<string> SideNavMenu = WebDriver.FindElements(DashbardPageLocators.SidePanelMenu).Select(x => x.Text.Trim()).ToList();
-            List<string> expectedItems = JsonHelper.GetTestData<List<string>>("Dashboard.json", "SideNavItems")!;
+            var sideNavMenu = _driver.FindElements(DashbardPageLocators.SidePanelMenu).Select(x => x.Text.Trim()).ToList();
 
-            Assert.That(SideNavMenu, Is.EqualTo(expectedItems));
+            var expectedItems = JsonHelper.GetTestData<List<string>>("Dashboard.json", "SideNavItems")!;
+
+            Assert.That(sideNavMenu, Is.EqualTo(expectedItems));
         }
     }
 }

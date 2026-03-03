@@ -11,24 +11,24 @@ namespace OrangeHRM_Revised.Tests
         [Test]
         public void SuccessfulLoginTest()
         {
-            LoginPage loginPage = new LoginPage(WebDriver);
+            LoginPage loginPage = new LoginPage(_driver);
             string username = JsonHelper.GetTestData<string>("LoginData.json", "ValidUser.Username");
             string password = JsonHelper.GetTestData<string>("LoginData.json", "ValidUser.Password");
             loginPage.Login(username, password);
 
-            Assert.IsTrue(WebDriver.Url.Contains("dashboard"));
+            Assert.IsTrue(_driver.Url.Contains("dashboard"));
         }
 
         [Test]
         public void FailedLoginTest()
         {
-            LoginPage loginPage = new LoginPage(WebDriver);
+            LoginPage loginPage = new LoginPage(_driver);
             string username = JsonHelper.GetTestData<string>("LoginData.json", "InvalidUser.Username");
             string password = JsonHelper.GetTestData<string>("LoginData.json", "InvalidUser.Password");
             loginPage.Login(username, password);
 
-            WaitHelper.WaitForElement(WebDriver, LoginPageLocators.InvalidCredentialMsg, 10);
-            Assert.IsTrue(WebDriver.FindElement(LoginPageLocators.InvalidCredentialMsg).Displayed);
+            WaitHelper.WaitForElement(_driver, LoginPageLocators.InvalidCredentialMsg, 10);
+            Assert.IsTrue(_driver.FindElement(LoginPageLocators.InvalidCredentialMsg).Displayed);
         }
     }
 }

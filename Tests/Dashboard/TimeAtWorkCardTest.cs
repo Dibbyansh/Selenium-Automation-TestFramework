@@ -1,4 +1,5 @@
-﻿using OrangeHRM_Revised.Base;
+﻿using NUnit.Framework;
+using OrangeHRM_Revised.Base;
 using OrangeHRM_Revised.Locators;
 using OrangeHRM_Revised.Pages.Dashboard;
 
@@ -12,10 +13,10 @@ namespace OrangeHRM_Revised.Tests.Dashboard
         [SetUp]
         public void Setup()
         {
-            timeAtWorkCardPage = new TimeAtWorkCardPage(WebDriver);
+            timeAtWorkCardPage = new TimeAtWorkCardPage(_driver);
         }
 
-        [Test]
+        [Test, Order(1)]
         public void PunchIn()
         {
             timeAtWorkCardPage.EnsureState("Punched Out");
@@ -23,12 +24,12 @@ namespace OrangeHRM_Revised.Tests.Dashboard
             timeAtWorkCardPage.AssertTimeDisplayed(TimePageLocators.Attendance_PunchedInTimeLabel);
         }
 
-        [Test]
+        [Test, Order(2)]
         public void PunchOut()
         {
             timeAtWorkCardPage.EnsureState("Punched In");
             timeAtWorkCardPage.PerformPunchFunc("Punch Out", "Punch In");
-            timeAtWorkCardPage.AssertTimeDisplayed(DashbardPageLocators.TimeAtWorkCard_PunchInTimeLabel, true);
+            timeAtWorkCardPage.AssertTimeDisplayed(DashbardPageLocators.TimeAtWorkCard_PunchInTimeLabel, navigateToDashboardFirst: true);
         }
     }
 }

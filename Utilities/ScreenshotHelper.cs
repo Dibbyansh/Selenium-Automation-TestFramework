@@ -4,11 +4,11 @@ namespace OrangeHRM_Revised.Utilities
 {
     public static class ScreenshotHelper
     {
-        public static string CaptureScreenshot(IWebDriver WebDriver)
+        public static string CaptureScreenshot(IWebDriver _driver)
         {
             try
             {
-                var screenshot = ((ITakesScreenshot)WebDriver).GetScreenshot();
+                var screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
 
                 var folderPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Screenshots");
                 Directory.CreateDirectory(folderPath);
