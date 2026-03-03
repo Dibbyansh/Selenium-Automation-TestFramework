@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OrangeHRM_Revised.Locators;
 using OrangeHRM_Revised.Utilities;
@@ -78,8 +79,9 @@ namespace OrangeHRM_Revised.Pages.Dashboard
 
         private void NavigateToDashboard()
         {
-            _driver.Navigate().GoToUrl(
-                "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+            var baseUri = new Uri(ConfigManager.BaseUrl);
+            var dashboardUrl = new Uri(baseUri, "/web/index.php/dashboard/index").ToString();
+            _driver.Navigate().GoToUrl(dashboardUrl);
         }
     }
 }

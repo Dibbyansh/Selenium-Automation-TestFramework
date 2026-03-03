@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using OrangeHRM_Revised.Utilities;
 
 namespace OrangeHRM_Revised.Base
 {
@@ -11,19 +12,28 @@ namespace OrangeHRM_Revised.Base
         public BasePage(IWebDriver _driver)
         {
             this._driver = _driver;
-            wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(ConfigManager.ExplicitWait));
         }
 
         protected void Click(By locator)
         {
-            wait.Until(d => d.FindElement(locator).Displayed);
-            _driver.FindElement(locator).Click();
+            var element = wait.Until(d =>
+            {
+                var el = d.FindElement(locator);
+                return el.Displayed ? el : null;
+            });
+            element!.Click();
         }
 
         protected void SendKeys(By locator, string text)
         {
-            _driver.FindElement(locator).Clear();
-            _driver.FindElement(locator).SendKeys(text);
+            var element = wait.Until(d =>
+            {
+                var el = d.FindElement(locator);
+                return el.Displayed ? el : null;
+            });
+            element!.Clear();
+            element.SendKeys(text);
         }
     }
 }

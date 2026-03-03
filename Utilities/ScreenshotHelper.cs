@@ -15,7 +15,7 @@ namespace OrangeHRM_Revised.Utilities
 
                 string testName = TestContext.CurrentContext.Test.Name.Replace(" ", "_");
 
-                string fileName = $"{testName}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.png";
+                string fileName = $"{testName}_{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss}.png";
                 string filePath = Path.Combine(folderPath, fileName);
 
                 screenshot.SaveAsFile(filePath);

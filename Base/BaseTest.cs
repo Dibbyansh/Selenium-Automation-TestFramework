@@ -13,7 +13,7 @@ namespace OrangeHRM_Revised.Base
         public void Setup()
         {
             _driver = DriverFactory.InitDriver();
-            _driver.Navigate().GoToUrl(ConfigManager.BaseUrl);
+            _driver.Navigate().GoToUrl(ConfigManager.BaseUrl + "/web/index.php/auth/login");
         }
 
         [TearDown]

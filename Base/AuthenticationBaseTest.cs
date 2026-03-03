@@ -16,7 +16,7 @@ namespace OrangeHRM_Revised.Base
         {
             // Initialize browser ONCE
             _driver = DriverFactory.InitDriver();
-            _driver.Navigate().GoToUrl(ConfigManager.BaseUrl);
+            _driver.Navigate().GoToUrl(ConfigManager.BaseUrl + "/web/index.php/auth/login");
 
             // Login ONCE - stay logged in for all tests in this class
             LoginPage loginPage = new LoginPage(_driver);
