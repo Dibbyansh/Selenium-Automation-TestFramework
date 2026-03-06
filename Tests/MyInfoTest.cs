@@ -70,6 +70,8 @@ namespace OrangeHRM_Revised.Tests
 
             string message = WaitHelper.WaitForElement(_driver, MyInfoPageLocators.ToastMessage).Text;
             Assert.That(message, Is.EqualTo("Successfully Updated"), "Toast message is not as expected");
+
+            //compare
         }
     }
 }
