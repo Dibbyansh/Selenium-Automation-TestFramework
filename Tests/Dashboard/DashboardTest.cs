@@ -43,7 +43,7 @@ namespace OrangeHRM_Revised.Tests.Dashboard
         }
 
         [Test]
-        public void SideNavMenuDisplaysCorrectly()
+        public void SideNavMenu_DisplaysCorrectly()
         {
             var sideNavMenu = _driver.FindElements(DashbardPageLocators.SidePanelMenu).Select(x => x.Text.Trim()).ToList();
 

@@ -8,57 +8,41 @@ public static class WaitHelper
     public static IWebElement WaitForElement(IWebDriver driver, By locator, int seconds = DefaultTimeoutSeconds)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
+        wait.IgnoreExceptionTypes(
+            typeof(NoSuchElementException),
+            typeof(StaleElementReferenceException));
 
         return wait.Until(d =>
         {
-            try
-            {
-                var element = d.FindElement(locator);
-                return element.Displayed ? element : null;
-            }
-            catch (NoSuchElementException)
-            {
-                return null;
-            }
-            catch (StaleElementReferenceException)
-            {
-                return null; // retry automatically
-            }
+            var element = d.FindElement(locator);
+            return element.Displayed ? element : null;
         })!;
     }
 
     public static void WaitForSpinnerToDisappear(IWebDriver driver, By locator, int seconds = DefaultTimeoutSeconds)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
+        wait.IgnoreExceptionTypes(
+            typeof(NoSuchElementException),
+            typeof(StaleElementReferenceException));
 
         wait.Until(d =>
         {
-            try
-            {
-                var elements = d.FindElements(locator);
-                return elements.Count == 0 || elements.All(e => !e.Displayed);
-            }
-            catch (StaleElementReferenceException)
-            {
-                return false; // retry instead of exiting early
-            }
+            var elements = d.FindElements(locator);
+            return elements.Count == 0 || elements.All(e => !e.Displayed);
         });
     }
 
     public static void WaitUntil(IWebDriver driver, Func<IWebDriver, bool> condition, int seconds = DefaultTimeoutSeconds)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
+        wait.IgnoreExceptionTypes(
+            typeof(NoSuchElementException),
+            typeof(StaleElementReferenceException));
 
         wait.Until(d =>
         {
-            try
-            {
-                return condition(d);
-            }
-            catch (StaleElementReferenceException)
-            {
-                return false; // retry
-            }
+            return condition(d);
         });
     }
 
